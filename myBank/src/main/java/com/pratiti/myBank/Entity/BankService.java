@@ -1,8 +1,8 @@
 package com.pratiti.myBank.Entity;
 
 import java.util.List;
-import java.util.Set;
 
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
@@ -23,14 +22,12 @@ public class BankService {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int s_id;
 	private String serviceName;
+	private int avgTime;
+
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
 	private List<Token> token;
-	
-	@JsonIgnore
-	@ManyToMany(mappedBy = "service")
-	private Set<Executive> executive;
 	
 	@JsonIgnore
 	@ManyToMany(mappedBy = "service")
@@ -40,7 +37,14 @@ public class BankService {
 	
 	
 	
+//	GETTERS  &  SETTERS
+	public int getAvgTime() {
+		return avgTime;
+	}
 	
+	public void setAvgTime(int avgTime) {
+		this.avgTime = avgTime;
+	}
 
 	public int getS_id() {
 		return s_id;
@@ -56,14 +60,6 @@ public class BankService {
 
 	public void setServiceName(String serviceName) {
 		this.serviceName = serviceName;
-	}
-
-	public Set<Executive> getExecutive() {
-		return executive;
-	}
-
-	public void setExecutive(Set<Executive> executive) {
-		this.executive = executive;
 	}
 
 	public Set<Counter> getCounter() {

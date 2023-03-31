@@ -1,17 +1,9 @@
 package com.pratiti.myBank.Entity;
 
-
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -23,19 +15,10 @@ public class Executive {
 	private String name;
 	private String email;
 	private String mob;
-	private String Password;
+	private String password;
 	
 
-	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name="executive_service", joinColumns = @JoinColumn(name="e_id"),inverseJoinColumns = @JoinColumn(name="s_id"))
-	private Set<BankService> service;
 
-	
-	
-	
-	
-	
 	public String getMob() {
 		return mob;
 	}
@@ -68,19 +51,10 @@ public class Executive {
 	}
 
 	public String getPassword() {
-		return Password;
+		return password;
 	}
 
 	public void setPassword(String password) {
-		Password = password;
+		this.password = password;
 	}
-
-	public Set<BankService> getService() {
-		return service;
-	}
-
-	public void setService(Set<BankService> service) {
-		this.service = service;
-	}
-
 }

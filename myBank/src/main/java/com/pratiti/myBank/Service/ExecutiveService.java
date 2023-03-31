@@ -1,13 +1,14 @@
 package com.pratiti.myBank.Service;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.pratiti.myBank.Entity.BankService;
+
+import com.pratiti.myBank.Entity.Counter;
 import com.pratiti.myBank.Entity.Executive;
+import com.pratiti.myBank.Exception.MyException;
+import com.pratiti.myBank.Model.LoginExecutive;
+import com.pratiti.myBank.Repository.CounterRepo;
 import com.pratiti.myBank.Repository.ExecutiveRepo;
-import com.pratiti.myBank.Repository.ServiceRepo;
 
 @Service
 public class ExecutiveService {
@@ -15,8 +16,8 @@ public class ExecutiveService {
 	private ExecutiveRepo executiveRepo;
 
 	@Autowired
-	private ServiceRepo serviceRepo;
-
+	private CounterRepo counterRepo;
+	
 //	@Autowired
 //	private ServiceService serviceService;
 
@@ -38,15 +39,26 @@ public class ExecutiveService {
 //		return executive.getE_id();
 //	}
 
-	public int addExecutive(Executive executive, Set<Integer> serviceIds) {
-		Set<BankService> serviceSet = new HashSet<>();
-		for (Integer i : serviceIds) {
-			BankService s = serviceRepo.findById(i).get();
-			serviceSet.add(s);
-		}
-		executive.setService(serviceSet);
+	public int addExecutive(Executive executive) {
+
 		executiveRepo.save(executive);
 		return executive.getE_id();
+	}
+
+//	Remove Executive ****************************************
+	public void removeExecutive(int id) {
+		executiveRepo.deleteById(id);
+	}
+
+	public int loginExecutive(LoginExecutive executiveModel) {
+		Executive executive = executiveRepo.findById(executiveModel.getId()).get();
+		Counter counter = counterRepo.findByCounterNo(executiveModel.getCounterNumber()).get(); 
+		if (executive.getPassword() != executiveModel.getePassword() || counter.getPassword() != executiveModel.getcPassword())
+			throw new MyException("!!!!!!!!!.......Id Password Not Matched...!!!!!!!");
+		else {
+			counter.setCounterOpen(1);
+			return 1;
+		}
 	}
 
 }

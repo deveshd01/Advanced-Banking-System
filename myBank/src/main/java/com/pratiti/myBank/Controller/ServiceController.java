@@ -22,9 +22,11 @@ public class ServiceController {
 	private ServiceService serviceService;
 	
 	@GetMapping("/addService")
-	public RequestStatus addService(@RequestParam String serviceName) {
+	public RequestStatus addService(@RequestParam String serviceName, int avgTime) {
 		BankService service = new BankService();
 		service.setServiceName(serviceName);
+		service.setAvgTime(avgTime);
+		
 		RequestStatus status = new RequestStatus();
 		try {
 			int cId = serviceService.addService(service);
@@ -36,6 +38,7 @@ public class ServiceController {
 			status.setStatus(false);
 			status.setMessage(e.getMessage());
 		}
+		
 		return status;
 	}
 	
