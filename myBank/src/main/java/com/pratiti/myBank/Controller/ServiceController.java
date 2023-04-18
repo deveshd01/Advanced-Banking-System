@@ -2,6 +2,7 @@ package com.pratiti.myBank.Controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,22 @@ public class ServiceController {
 	@GetMapping("/showAllServices")
 	public List<BankService> findAll(){
 		return serviceService.findAll();
+	}
+	
+	@GetMapping("/removeService")
+	public RequestStatus removeService(@RequestParam int id) {
+		RequestStatus status = new RequestStatus();
+		try {
+			serviceService.removeService(id);
+			status.setStatus(true);
+			status.setMessage("Service Removed Successfully......!!!!!!");
+			status.setId(id);
+		}
+		catch(MyException e) {
+			status.setStatus(false);
+			status.setMessage(e.getMessage());
+		}
+		return status;
 	}
 
 }

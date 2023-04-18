@@ -26,6 +26,8 @@ public class Counter {
 	private int counterOpen=0;
 	private String password;
 	private int queueTotalTime;
+	private int available=1;
+
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "counter", cascade = CascadeType.ALL)
@@ -37,12 +39,19 @@ public class Counter {
 	
 	
 	
-	
 	public void updateQueueTotalTime(BankService service) {
 		this.queueTotalTime += service.getAvgTime();
 	}
 	
 //	 GETTERS & SETTERS
+	public int getAvailable() {
+		return available;
+	}
+	public void setAvailable(int available) {
+		this.available = available;
+	}
+
+	
 	public int getQueueTotalTime() {
 		return queueTotalTime;
 	}
@@ -50,7 +59,6 @@ public class Counter {
 		this.queueTotalTime = queueTotalTime;
 	}
 	
-
 	public String getPassword() {
 		return password;
 	}
@@ -71,10 +79,6 @@ public class Counter {
 	public void setTokenList(List<Token> tokenList) {
 		this.tokenList = tokenList;
 	}
-	
-//	public void addTokenInList(Token token) {
-//		this.tokenList.add(token);
-//	}
 	public int getC_id() {
 		return c_id;
 	}
@@ -93,5 +97,4 @@ public class Counter {
 	public void setCounterNo(int counterNo) {
 		this.counterNo = counterNo;
 	}
-
 }

@@ -1,5 +1,7 @@
 package com.pratiti.myBank.Controller;
 
+import java.util.List;
+
 import java.util.Set;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,99 +18,119 @@ import com.pratiti.myBank.Model.CounterModel;
 import com.pratiti.myBank.Model.RequestStatus;
 import com.pratiti.myBank.Service.CounterService;
 
-
 @RestController
 @CrossOrigin
 public class CounterController {
 	@Autowired
-	private CounterService CounterService; 
-	
+	private CounterService counterService;
+
 	@PostMapping("/addCounter")
 	public RequestStatus addCounter(@RequestBody CounterModel counterModel) {
 		Counter counter = new Counter();
 		BeanUtils.copyProperties(counterModel, counter);
-		
+
 		Set<Integer> serviceIds = counterModel.getServiceIds();
-		
+
 		RequestStatus status = new RequestStatus();
 		try {
-			int cId = CounterService.addCounter(counter,serviceIds);
+			int cId = counterService.addCounter(counter, serviceIds);
 			status.setStatus(true);
 			status.setMessage("Counter Added......!!!!!!");
 			status.setId(cId);
-		}
-		catch(MyException e) {
+		} catch (MyException e) {
 			status.setStatus(false);
 			status.setMessage(e.getMessage());
 		}
 		return status;
 	}
-	
+
 	@GetMapping("/addTokenAgain")
 	public RequestStatus addTokenAgain(@RequestParam int tokenId, int counterId) {
-		
+
 		RequestStatus status = new RequestStatus();
 		try {
-			CounterService.addTokenAgain(tokenId, counterId);
+			counterService.addTokenAgain(tokenId, counterId);
 			status.setStatus(true);
 			status.setMessage("Token Added in Queue.... with CounterId : " + counterId + "  & tokenId " + tokenId + "......!!!!!! ");
-		}
-		catch(MyException e) {
+		} catch (MyException e) {
 			status.setStatus(false);
 			status.setMessage(e.getMessage());
 		}
 		return status;
 	}
-	
-	
+
 	@PostMapping("/updateCounterService")
 	public RequestStatus updateCounterService(@RequestBody CounterModel counterModel, @RequestParam int operation) {
-		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\noperation="+operation);
-		System.out.println("couter pass="+counterModel.getPassword());
+		Counter counter = new Counter();
+		counter.setC_id(counterModel.getCounterId());
+		counter.setPassword(counterModel.getPassword());
+		
+		Set<Integer> serviceIds = counterModel.getServiceIds();
+	
 		
 		RequestStatus status = new RequestStatus();
 		try {
-			CounterService.updateCounterService(counterModel,operation);
+			counterService.updateCounterService(counter, operation, serviceIds);
 			status.setStatus(true);
 			status.setMessage("Services updated...!!!");
-		}
-		catch(MyException e) {
+		} catch (MyException e) {
 			status.setStatus(false);
 			status.setMessage(e.getMessage());
 		}
 		return status;
 	}
-	
+
 	@GetMapping("/counterClose")
 	public RequestStatus counterClose(@RequestParam int counterId) {
 		RequestStatus status = new RequestStatus();
 		try {
-			CounterService.counterClose(counterId);
+			counterService.counterClose(counterId);
 			status.setStatus(true);
 			status.setMessage("Addinging new peoples on This Counter is STOPPED...!!! ");
-		}
-		catch(MyException e) {
+		} catch (MyException e) {
 			status.setStatus(false);
 			status.setMessage(e.getMessage());
 		}
 		return status;
 	}
-	
+
 	@GetMapping("/emptyAllCounter")
 	public RequestStatus emptyAllCounter() {
 		RequestStatus status = new RequestStatus();
 		try {
-			CounterService.emptyAllCounter();
+			counterService.emptyAllCounter();
 			status.setStatus(true);
 			status.setMessage("All counters Queues Closed Good Night...!!! ");
-		}
-		catch(MyException e) {
+		} catch (MyException e) {
 			status.setStatus(false);
 			status.setMessage(e.getMessage());
 		}
 		return status;
 	}
-	
-	
+
+	@GetMapping("/showAllCounters")
+	public List<Counter> findAll() {
+		return counterService.findAll();
+	}
+
+	@GetMapping("/showCounter")
+	public CounterModel findCounter(@RequestParam int id) {
+		return counterService.findCounter(id);
+	}
+
+	@GetMapping("/removeCounter")
+	public RequestStatus removeCounter(@RequestParam int id) {
+		RequestStatus status = new RequestStatus();
+		try {
+			counterService.removeCounter(id);
+			status.setStatus(true);
+			status.setMessage("Counter Removed Successfully......!!!!!!");
+			status.setId(id);
+		} catch (MyException e) {
+			status.setStatus(false);
+			status.setMessage(e.getMessage());
+		}
+		return status;
+	}
 
 }

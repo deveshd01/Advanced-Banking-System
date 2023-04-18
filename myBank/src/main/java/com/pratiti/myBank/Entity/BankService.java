@@ -1,7 +1,7 @@
 package com.pratiti.myBank.Entity;
 
 import java.util.List;
-
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -13,8 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-
 @Entity
 @Table
 public class BankService {
@@ -23,25 +21,31 @@ public class BankService {
 	private int s_id;
 	private String serviceName;
 	private int avgTime;
-
+	private int available = 1;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
 	private List<Token> token;
-	
+
 	@JsonIgnore
 	@ManyToMany(mappedBy = "service")
 	private Set<Counter> counter;
-	
 
-	
-	
-	
-//	GETTERS  &  SETTERS
+
+
+	// GETTERS & SETTERS
+	public int getAvailable() {
+		return available;
+	}
+
+	public void setAvailable(int available) {
+		this.available = available;
+	}
+
 	public int getAvgTime() {
 		return avgTime;
 	}
-	
+
 	public void setAvgTime(int avgTime) {
 		this.avgTime = avgTime;
 	}
@@ -77,7 +81,4 @@ public class BankService {
 	public void setToken(List<Token> token) {
 		this.token = token;
 	}
-
-		
-	
 }

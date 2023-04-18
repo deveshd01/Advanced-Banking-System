@@ -1,14 +1,22 @@
 package com.pratiti.myBank.Model;
 
 import java.util.Set;
+import com.pratiti.myBank.Entity.BankService;
 
 public class CounterModel {
 	private int counterId;
 	private int counterNo;
 	private Set<Integer> serviceIds;
 	private String password;
+	private Set<BankService> Services;
 	
 	
+	public Set<BankService> getServices() {
+		return Services;
+	}
+	public void setServices(Set<BankService> services) {
+		Services = services;
+	}
 	public int getCounterId() {
 		return counterId;
 	}

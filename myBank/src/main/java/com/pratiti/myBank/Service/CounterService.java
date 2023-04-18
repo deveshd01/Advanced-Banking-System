@@ -1,5 +1,7 @@
 package com.pratiti.myBank.Service;
 
+import java.util.ArrayList;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +45,7 @@ public class CounterService {
 			counter.setService(serviceSet);
 			counterRepo.save(counter);
 			return counter.getC_id();
-		} else
+		} 
 			throw new MyException("Counter Already Exist");
 	}
 
@@ -69,15 +71,16 @@ public class CounterService {
 			tokenRepo.save(token);
 			throw new MyException("Token Recall Limit Exceeded");
 		}
+		
+		
 	}
 
-	public void updateCounterService(CounterModel counterModel, int operation) {
-		String password = counterModel.getPassword();		
-		int counterId = counterModel.getCounterId();
+	public void updateCounterService(Counter userCounter, int operation, Set<Integer> newServiceIds) {
+		String password = userCounter.getPassword();		
+		int counterId = userCounter.getC_id();
 		Counter counter = counterRepo.findById(counterId).get();
 		
 		if(counter.getPassword().equals(password)) {
-			Set<Integer> newServiceIds =  counterModel.getServiceIds();
 			Set<BankService> currentServices = counter.getService();
 			for(int id:newServiceIds) {
 				BankService s = serviceRepo.findById(id).get();
@@ -92,13 +95,13 @@ public class CounterService {
 			}
 			counter.setService(currentServices);
 			counterRepo.save(counter);
+			return;
 		}
-		else throw new MyException("Wrong Counter Password...!!!!");
+		 throw new MyException("Wrong Counter ID Password...!!!!");
 		
 	}
 
 	public void counterClose(int counterId) {
-		// TODO Auto-generated method stub
 		Counter counter = counterRepo.findById(counterId).get();
 		counter.setCounterOpen(0);
 		counterRepo.save(counter);
@@ -116,6 +119,35 @@ public class CounterService {
 			}
 		}		
 	}
+	
+	public List<Counter> findAll() {
+		List<Counter> counters = new ArrayList<>();
+		counters = counterRepo.findAll();
+		return counters;
+	}
+
+	public void removeCounter(int id) {
+		 try {
+			 Counter c = counterRepo.findById(id).get();	
+			 c.setAvailable(0);
+			 counterRepo.save(c);
+			
+		} catch (Exception e) {
+			throw new MyException("Wrong Counter Id...!!!!");
+		}
+	}
+
+	public CounterModel findCounter(int id) {
+		Counter counter = counterRepo.findByCounterNo(id).get();
+		CounterModel counterModel = new CounterModel();
+		counterModel.setCounterId(counter.getC_id());
+		counterModel.setCounterNo(counter.getCounterNo());	
+//		List<BankService> serviceList = new ArrayList<BankService>(counter.getService());
+		counterModel.setServices(counter.getService());
+		
+		return counterModel;
+	}
+	
 	
 	
 }

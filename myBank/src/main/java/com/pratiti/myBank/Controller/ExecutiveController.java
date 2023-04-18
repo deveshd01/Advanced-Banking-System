@@ -1,11 +1,17 @@
 package com.pratiti.myBank.Controller;
 
+import java.util.List;
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -46,10 +52,10 @@ public class ExecutiveController {
 
 		RequestStatus status = new RequestStatus();
 		try {
-			int cId = executiveService.loginExecutive(executiveModel);
+			int cid = executiveService.loginExecutive(executiveModel);
 			status.setStatus(true);
-			status.setMessage("Executive Added......!!!!!!");
-			status.setId(cId);
+			status.setMessage("Executive Login Successful......!!!!!!");
+			status.setId(cid);
 		}
 		catch(MyException e) {
 			status.setStatus(false);
@@ -58,21 +64,27 @@ public class ExecutiveController {
 		return status;
 	}
 	
-//	@DeleteMapping("/removeExecutive")
-//	public RequestStatus removeExecutive(@PathVariable int id) {
-//		RequestStatus status = new RequestStatus();
-//		try {
-//			executiveService.removeExecutive(id);
-//			status.setStatus(true);
-//			status.setMessage("Executive Removed Successfully......!!!!!!");
-//			status.setId(id);
-//		}
-//		catch(MyException e) {
-//			status.setStatus(false);
-//			status.setMessage(e.getMessage());
-//		}
-//		return status;
-//	}
+	@GetMapping("/showAllExecutives")
+	public List<Executive> findAll(){
+		return executiveService.findAll();
+	}
+	
+	
+	@GetMapping("/removeExecutive")
+	public RequestStatus removeExecutive(@RequestParam int id) {
+		RequestStatus status = new RequestStatus();
+		try {
+			executiveService.removeExecutive(id);
+			status.setStatus(true);
+			status.setMessage("Executive Removed Successfully......!!!!!!");
+			status.setId(id);
+		}
+		catch(MyException e) {
+			status.setStatus(false);
+			status.setMessage(e.getMessage());
+		}
+		return status;
+	}
 	
 
 }

@@ -1,5 +1,8 @@
 package com.pratiti.myBank.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,18 +50,36 @@ public class ExecutiveService {
 
 //	Remove Executive ****************************************
 	public void removeExecutive(int id) {
-		executiveRepo.deleteById(id);
+		try {
+			Executive e = executiveRepo.findById(id).get();
+			e.setAvailable(0);
+			executiveRepo.save(e);
+		} catch (Exception e) {
+			throw new MyException("Wrong Executive Id...!!!!"); 
+		}
 	}
 
 	public int loginExecutive(LoginExecutive executiveModel) {
+		if(!executiveRepo.existsById(executiveModel.getId()) || !counterRepo.existsByCounterNo(executiveModel.getCounterNumber())   ){
+			throw new MyException("!!!!!!!!!.......Id Not Matched...!!!!!!!");
+		}
 		Executive executive = executiveRepo.findById(executiveModel.getId()).get();
 		Counter counter = counterRepo.findByCounterNo(executiveModel.getCounterNumber()).get(); 
-		if (executive.getPassword() != executiveModel.getePassword() || counter.getPassword() != executiveModel.getcPassword())
-			throw new MyException("!!!!!!!!!.......Id Password Not Matched...!!!!!!!");
-		else {
+		
+		if(counter.getCounterOpen()!=0) {throw new MyException("!!!!!!!!!.......Counter Already Open...!!!!!!!");}
+		if (executive.getPassword().equals(executiveModel.getePassword())  && counter.getPassword().equals(executiveModel.getcPassword())){
 			counter.setCounterOpen(1);
-			return 1;
+			counterRepo.save(counter);
+			return counter.getC_id();
 		}
+		throw new MyException("!!!!!!!!!.......Id Password Not Matched...!!!!!!!");
+		
+	}
+	
+	public List<Executive> findAll() {
+		List<Executive> executives = new ArrayList<>();
+		executives = executiveRepo.findAll();
+		return executives;
 	}
 
 }

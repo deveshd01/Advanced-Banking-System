@@ -16,8 +16,15 @@ public class Executive {
 	private String email;
 	private String mob;
 	private String password;
-	
+	private int available=1;
 
+
+	public int getAvailable() {
+		return available;
+	}
+	public void setAvailable(int available) {
+		this.available = available;
+	}
 
 	public String getMob() {
 		return mob;

@@ -20,7 +20,7 @@ public class ServiceService {
 		if (!serviceRepo.existsByServiceName(service.getServiceName())) {
 			serviceRepo.save(service);
 			return service.getS_id();
-		} else
+		} 
 			throw new MyException("Service Already Exist");
 	}
 
@@ -29,4 +29,19 @@ public class ServiceService {
 		services = serviceRepo.findAll();
 		return services;
 	}
+
+	public void removeService(int id) {
+		try {
+			BankService s= serviceRepo.findById(id).get();
+			s.setAvailable(0);
+			serviceRepo.save(s);
+			
+		} catch (Exception e) {
+			throw new MyException("Wrong Service Id...!!!!");			
+		}
+		
+		
+	}
+	
+	
 }
